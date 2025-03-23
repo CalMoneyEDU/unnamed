@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Art Buddy – AI Art Critique Tool</title>
+  <title>Art Buddy – AI Art Critique</title>
   <style>
     body {
       margin: 0;
@@ -13,40 +13,39 @@
     }
 
     header {
-      background: #222;
-      color: #fff;
-      padding: 2rem;
+      background: #1e1e1e;
+      color: white;
+      padding: 3rem 1rem 2rem;
       text-align: center;
     }
 
     h1 {
       margin: 0;
-      font-size: 2.2rem;
+      font-size: 3rem;
     }
 
-    .container {
-      max-width: 900px;
-      margin: 2rem auto;
-      background: #fff;
-      border-radius: 12px;
-      padding: 2rem;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    p.subtitle {
+      font-size: 1.25rem;
+      margin-top: 0.5rem;
+      color: #ccc;
     }
 
-    .instructions {
-      margin-bottom: 2rem;
-    }
-
-    pre {
-      background: #f0f0f0;
-      padding: 1rem;
-      border-radius: 8px;
-      overflow-x: auto;
-      white-space: pre-wrap;
+    .chat-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 3rem 1rem;
+      background: white;
+      min-height: 60vh;
     }
 
     #chatgpt-widget {
-      margin-top: 2rem;
+      width: 100%;
+      max-width: 800px;
+      min-height: 600px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
     }
 
     footer {
@@ -54,6 +53,7 @@
       padding: 2rem;
       font-size: 0.9rem;
       color: #777;
+      background-color: #f0f0f0;
     }
   </style>
 </head>
@@ -61,39 +61,18 @@
 
 <header>
   <h1>Art Buddy</h1>
-  <p>Your AI Art Critique Companion</p>
+  <p class="subtitle">Your AI Art Critique Companion</p>
 </header>
 
-<div class="container">
-  <div class="instructions">
-    <h2>How to Use</h2>
-    <p>Paste this prompt into the chat below to get structured, professional art critique:</p>
-    <pre>
-I want you to act like a thoughtful, experienced art student and practicing artist giving a deep critique of my artwork. Be supportive, constructive, and honest — like we’re in an advanced studio critique session.
-
-Use this structure:
-1. Initial Impressions  
-2. Composition & Technique  
-3. Classic Art References  
-4. Modern/Chosen Style Critique  
-5. Suggestions for Development  
-6. Artistic Voice
-
-Here is my piece: [Insert description or image here]  
-Medium: [e.g. digital, oil, graphite]  
-Style or influence: [e.g. surrealism, vaporwave, abstract expressionism]
-    </pre>
-    <p>Then interact with the Art Buddy GPT below!</p>
-  </div>
-
+<section class="chat-container">
   <div id="chatgpt-widget"></div>
-</div>
+</section>
 
 <footer>
   &copy; 2025 Art Buddy – Designed for artists, students, and creatives.
 </footer>
 
-<!-- Embed the Art Buddy GPT -->
+<!-- GPT Widget Embed -->
 <script src="https://chat.openai.com/chat.js"></script>
 <script>
   window.ChatGPTWidget.init({

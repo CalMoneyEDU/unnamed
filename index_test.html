@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Art Buddy – AI Art Critique Tool</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f4f4;
+      color: #222;
+    }
+
+    header {
+      background: #222;
+      color: #fff;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2.2rem;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 2rem auto;
+      background: #fff;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .instructions {
+      margin-bottom: 2rem;
+    }
+
+    pre {
+      background: #f0f0f0;
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+      white-space: pre-wrap;
+    }
+
+    #chatgpt-widget {
+      margin-top: 2rem;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.9rem;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Art Buddy</h1>
+  <p>Your AI Art Critique Companion</p>
+</header>
+
+<div class="container">
+  <div class="instructions">
+    <h2>How to Use</h2>
+    <p>Paste this prompt into the chat below to get structured, professional art critique:</p>
+    <pre>
+I want you to act like a thoughtful, experienced art student and practicing artist giving a deep critique of my artwork. Be supportive, constructive, and honest — like we’re in an advanced studio critique session.
+
+Use this structure:
+1. Initial Impressions  
+2. Composition & Technique  
+3. Classic Art References  
+4. Modern/Chosen Style Critique  
+5. Suggestions for Development  
+6. Artistic Voice
+
+Here is my piece: [Insert description or image here]  
+Medium: [e.g. digital, oil, graphite]  
+Style or influence: [e.g. surrealism, vaporwave, abstract expressionism]
+    </pre>
+    <p>Then interact with the Art Buddy GPT below!</p>
+  </div>
+
+  <div id="chatgpt-widget"></div>
+</div>
+
+<footer>
+  &copy; 2025 Art Buddy – Designed for artists, students, and creatives.
+</footer>
+
+<!-- Embed the Art Buddy GPT -->
+<script src="https://chat.openai.com/chat.js"></script>
+<script>
+  window.ChatGPTWidget.init({
+    selector: "#chatgpt-widget",
+    chatGptId: "g-67df98e8ad8c8191b3d72560bf85751f"
+  });
+</script>
+
+</body>
+</html>

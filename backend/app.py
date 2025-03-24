@@ -16,7 +16,6 @@ def critique():
     style = data.get("style", "surrealism")
 
     prompt = prompts.generate_prompt(art, style)
-
     messages = [
         {"role": "system", "content": prompts.system_message},
         {"role": "user", "content": prompt}
@@ -33,3 +32,4 @@ def critique():
 
 if __name__ == "__main__":
     app.run(debug=True)
+    

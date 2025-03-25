@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Art Buddy – AI Art Critique</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; background: #f4f4f4; color: #222; margin: 0; }
+    header { background: #1e1e1e; color: white; text-align: center; padding: 3rem 1rem 2rem; }
+    h1 { margin: 0; font-size: 3rem; }
+    .subtitle { font-size: 1.25rem; color: #ccc; margin-top: 0.5rem; }
+
+    .chat-container {
+      display: flex; justify-content: center; padding: 3rem 1rem;
+      background: white; min-height: 60vh;
+    }
+
+    form {
+      width: 100%; max-width: 800px;
+      background: #fff; padding: 2rem;
+      border-radius: 12px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    textarea, input {
+      width: 100%; padding: 0.75rem;
+      margin-top: 0.5rem; margin-bottom: 1rem;
+      border: 1px solid #ccc; border-radius: 8px;
+    }
+
+    button {
+      background-color: #1e1e1e; color: white;
+      padding: 0.75rem 1.5rem; border: none;
+      border-radius: 8px; cursor: pointer;
+    }
+
+    #response {
+      margin-top: 2rem;
+      white-space: pre-wrap;
+      background: #f9f9f9;
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+
+    footer {
+      text-align: center; padding: 2rem;
+      font-size: 0.9rem; background-color: #f0f0f0; color: #777;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Art Buddy</h1>
+  <p class="subtitle">Your AI Art Critique Companion</p>
+</header>
+
+<section class="chat-container">
+  <form id="critique-form">
+    <label>Describe your artwork:
+      <textarea id="art" rows="4" placeholder="e.g., A digital painting of a dreamy forest at night..."></textarea>
+    </label>
+    <label>Style (e.g., surrealism, brutalism):
+      <input id="style" type="text" placeholder="e.g., surrealism" />
+    </label>
+    <button type="submit">Get Critique</button>
+    <div id="response"></div>
+  </form>
+</section>
+
+<footer>&copy; 2025 Art Buddy – Designed for artists, students, and creatives.</footer>
+
+<script>
+  const form = document.getElementById("critique-form");
+  const responseDiv = document.getElementById("response");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const art = document.getElementById("art").value.trim();
+    const style = document.getElementById("style").value.trim();
+
+    if (!art) {
+      responseDiv.textContent = "Please describe your artwork.";
+      return;
+    }
+
+    responseDiv.textContent = "Thinking...";
+
+    try {
+      const res = await fetch("https://your-flask-app.onrender.com/api/critique", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ art, style })
+      });
+
+      const data = await res.json();
+      responseDiv.textContent = data.critique || "The response was empty.";
+    } catch (err) {
+      console.error(err);
+      responseDiv.textContent = "Something went wrong.";
+    }
+  });
+</script>
+
+</body>
+</html>

@@ -6,4 +6,3 @@ services:
     startCommand: gunicorn app:app
     envVars:
       - key: API_Key_Calv
-        value: YOUR_OPENAI_API_KEY_HERE

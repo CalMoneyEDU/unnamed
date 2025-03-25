@@ -125,7 +125,7 @@
 <section class="chat-container">
   <form id="critique-form">
     <label>How would you like me to critique your artwork?
-      <textarea id="art" rows="4" placeholder="e.g., Focus on the emotional impact, composition, or use of color..."></textarea>
+      <textarea id="art" rows="4" placeholder="e.g., Focus on composition, color, or mood..."></textarea>
     </label>
 
     <label>Upload your artwork (JPG or PNG, max 5MB):
@@ -202,11 +202,25 @@
         body: formData
       });
 
+      if (!res.ok) {
+        const error = await res.json();
+        throw new Error(error?.error || "Server error");
+      }
+
       const data = await res.json();
-      responseDiv.textContent = data.critique || "The response was empty.";
+      console.log("✅ Server response:", data);
+
+      if (data.critique) {
+        responseDiv.textContent = data.critique;
+      } else if (data.error) {
+        responseDiv.textContent = `Error: ${data.error}`;
+      } else {
+        responseDiv.textContent = "Received an unknown response.";
+      }
+
     } catch (err) {
-      console.error(err);
-      responseDiv.textContent = "Something went wrong.";
+      console.error("❌ Frontend error:", err);
+      responseDiv.textContent = `Something went wrong: ${err.message}`;
     }
   });
 </script>

@@ -5,32 +5,89 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Art Buddy – AI Art Critique</title>
   <style>
-    body { font-family: 'Segoe UI', sans-serif; background: #f4f4f4; color: #222; margin: 0; }
-    header { background: #1e1e1e; color: white; text-align: center; padding: 3rem 1rem 2rem; }
-    h1 { margin: 0; font-size: 3rem; }
-    .subtitle { font-size: 1.25rem; color: #ccc; margin-top: 0.5rem; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f4f4f4;
+      color: #222;
+      margin: 0;
+    }
+
+    header {
+      background: #1e1e1e;
+      color: white;
+      text-align: center;
+      padding: 3rem 1rem 2rem;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 3rem;
+    }
+
+    .subtitle {
+      font-size: 1.25rem;
+      color: #ccc;
+      margin-top: 0.5rem;
+    }
 
     .chat-container {
-      display: flex; justify-content: center; padding: 3rem 1rem;
-      background: white; min-height: 60vh;
+      display: flex;
+      justify-content: center;
+      padding: 3rem 1rem;
+      background: white;
+      min-height: 60vh;
     }
 
     form {
-      width: 100%; max-width: 800px;
-      background: #fff; padding: 2rem;
-      border-radius: 12px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+      width: 100%;
+      max-width: 800px;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
     }
 
-    textarea, input, button {
-      width: 100%; padding: 0.75rem;
-      margin-top: 0.5rem; margin-bottom: 1rem;
-      border: 1px solid #ccc; border-radius: 8px;
+    textarea, input[type="text"] {
+      width: 100%;
+      padding: 0.75rem;
+      margin-top: 0.5rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
       font-size: 1rem;
     }
 
+    input[type="file"] {
+      width: 100%;
+      padding: 1rem;
+      border: 2px dashed #ccc;
+      border-radius: 10px;
+      background-color: #f9f9f9;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+    }
+
+    input[type="file"]:hover {
+      border-color: #999;
+      background-color: #f0f0f0;
+    }
+
+    #file-warning {
+      color: red;
+      font-size: 0.9rem;
+      margin-top: -10px;
+      margin-bottom: 10px;
+    }
+
     button {
-      background-color: #1e1e1e; color: white;
-      border: none; cursor: pointer;
+      background-color: #1e1e1e;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      cursor: pointer;
     }
 
     #response {
@@ -42,9 +99,19 @@
       border: 1px solid #ddd;
     }
 
+    #preview {
+      max-width: 100%;
+      margin-top: 10px;
+      display: none;
+      border-radius: 8px;
+    }
+
     footer {
-      text-align: center; padding: 2rem;
-      font-size: 0.9rem; background-color: #f0f0f0; color: #777;
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.9rem;
+      background-color: #f0f0f0;
+      color: #777;
     }
   </style>
 </head>
@@ -58,12 +125,14 @@
 <section class="chat-container">
   <form id="critique-form">
     <label>How would you like me to critique your artwork?
-      <textarea id="art" rows="4" placeholder="e.g., Focus on composition and color choices..."></textarea>
+      <textarea id="art" rows="4" placeholder="e.g., Focus on the emotional impact, composition, or use of color..."></textarea>
     </label>
 
-    <label>Upload your artwork (image file):
-      <input type="file" id="file" accept="image/*" />
+    <label>Upload your artwork (JPG or PNG, max 5MB):
+      <input type="file" id="file" accept="image/png, image/jpeg" />
     </label>
+    <div id="file-warning"></div>
+    <img id="preview" />
 
     <label>Style (e.g., surrealism, brutalism):
       <input id="style" type="text" placeholder="e.g., surrealism" />
@@ -79,30 +148,58 @@
 <script>
   const form = document.getElementById("critique-form");
   const responseDiv = document.getElementById("response");
+  const fileInput = document.getElementById("file");
+  const warning = document.getElementById("file-warning");
+  const preview = document.getElementById("preview");
+
+  fileInput.addEventListener("change", () => {
+    warning.textContent = "";
+    const file = fileInput.files[0];
+
+    if (file && file.size > 5 * 1024 * 1024) {
+      warning.textContent = "File is too large (max 5MB)";
+      fileInput.value = "";
+      preview.style.display = "none";
+      return;
+    }
+
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        preview.src = e.target.result;
+        preview.style.display = "block";
+      };
+      reader.readAsDataURL(file);
+    }
+  });
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
     const art = document.getElementById("art").value.trim();
     const style = document.getElementById("style").value.trim();
-    const fileInput = document.getElementById("file");
     const file = fileInput.files[0];
 
     if (!art) {
-      responseDiv.textContent = "Please enter your critique instructions.";
+      responseDiv.textContent = "Please enter critique instructions.";
+      return;
+    }
+
+    if (!file) {
+      responseDiv.textContent = "Please upload an artwork image.";
       return;
     }
 
     const formData = new FormData();
     formData.append("art", art);
     formData.append("style", style);
-    if (file) formData.append("file", file);
+    formData.append("file", file);
 
-    responseDiv.textContent = "Thinking...";
+    responseDiv.textContent = "Analyzing your artwork...";
 
     try {
-      const res = await fetch("https://unnamed-wjfa.onrender.com/api/critique", {
+      const res = await fetch("https://your-backend-url.onrender.com/api/critique", {
         method: "POST",
-        body: formData,
+        body: formData
       });
 
       const data = await res.json();

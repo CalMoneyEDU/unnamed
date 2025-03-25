@@ -21,16 +21,16 @@
       border-radius: 12px; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
     }
 
-    textarea, input {
+    textarea, input, button {
       width: 100%; padding: 0.75rem;
       margin-top: 0.5rem; margin-bottom: 1rem;
       border: 1px solid #ccc; border-radius: 8px;
+      font-size: 1rem;
     }
 
     button {
       background-color: #1e1e1e; color: white;
-      padding: 0.75rem 1.5rem; border: none;
-      border-radius: 8px; cursor: pointer;
+      border: none; cursor: pointer;
     }
 
     #response {
@@ -57,12 +57,18 @@
 
 <section class="chat-container">
   <form id="critique-form">
-    <label>Describe your artwork:
-      <textarea id="art" rows="4" placeholder="e.g., A digital painting of a dreamy forest at night..."></textarea>
+    <label>How would you like me to critique your artwork?
+      <textarea id="art" rows="4" placeholder="e.g., Focus on composition and color choices..."></textarea>
     </label>
+
+    <label>Upload your artwork (image file):
+      <input type="file" id="file" accept="image/*" />
+    </label>
+
     <label>Style (e.g., surrealism, brutalism):
       <input id="style" type="text" placeholder="e.g., surrealism" />
     </label>
+
     <button type="submit">Get Critique</button>
     <div id="response"></div>
   </form>
@@ -78,19 +84,25 @@
     e.preventDefault();
     const art = document.getElementById("art").value.trim();
     const style = document.getElementById("style").value.trim();
+    const fileInput = document.getElementById("file");
+    const file = fileInput.files[0];
 
     if (!art) {
-      responseDiv.textContent = "Please describe your artwork.";
+      responseDiv.textContent = "Please enter your critique instructions.";
       return;
     }
+
+    const formData = new FormData();
+    formData.append("art", art);
+    formData.append("style", style);
+    if (file) formData.append("file", file);
 
     responseDiv.textContent = "Thinking...";
 
     try {
-      const res = await fetch("https://unnamed-wjfa.onrender.com", {
+      const res = await fetch("https://unnamed-wjfa.onrender.com/api/critique", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ art, style })
+        body: formData,
       });
 
       const data = await res.json();

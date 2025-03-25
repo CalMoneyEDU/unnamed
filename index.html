@@ -197,7 +197,7 @@
     responseDiv.textContent = "Analyzing your artwork...";
 
     try {
-      const res = await fetch("https://unnamed-vos3.onrender.com", {
+      const res = await fetch("https://unnamed-vos3.onrender.com/api/critique", {
         method: "POST",
         body: formData
       });

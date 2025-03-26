@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from openai import OpenAI
 from dotenv import load_dotenv
 import os
@@ -12,6 +13,7 @@ client = OpenAI(api_key=os.getenv("API_Key_Calv"))
 
 # Flask app config
 app = Flask(__name__)
+CORS(app, origins=["https://calmoneyedu.github.io"])
 UPLOAD_FOLDER = "uploads"
 MAX_CONTENT_LENGTH = 5 * 1024 * 1024  # 5 MB
 ALLOWED_EXTENSIONS = {"png", "jpg", "jpeg"}
